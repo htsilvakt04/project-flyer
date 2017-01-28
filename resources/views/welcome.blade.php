@@ -79,7 +79,10 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Laravel bla bla bka
+                </div>
+                <div class="title m-b-md">
+                    Project-flyer
                 </div>
 
                 <div class="links">
