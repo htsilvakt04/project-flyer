@@ -3,14 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title>Project Flyer</title>
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/libs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.css">
   </head>
   <body>
+
     @include("partials.nav")
 
     <div class="container">
       @yield("content")
     </div>
+
+    <script src="/js/libs.js"></script>
+    @yield("scripts.footer")
+    @include("flash")
   </body>
 </html>

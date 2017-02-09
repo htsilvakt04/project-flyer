@@ -1,11 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Photo;
+use App\Flyer;
+use App\Http\Requests\FlyerRequest;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\UploadedFile;
 class FlyersController extends Controller
 {
+    public function __construct()
+    {
+      $this->middleware("auth", ["except"=>["show"]]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -32,10 +38,18 @@ class FlyersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FlyerRequest $request)
     {
-        // create the flyers
-        // $request->all();
+
+        //Create a Flyer record
+        Flyer::create($request->all());
+
+
+        //Flash success message
+        flash()->success("Succeess!", "Your flyer has been created.");
+
+        //Redirect
+        return redirect()->back();
     }
 
     /**
@@ -44,9 +58,10 @@ class FlyersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($zip, $street)
     {
-        //
+        $flyer = Flyer::locatedAt($zip, $street);
+        return view("flyers.show", compact("flyer"));
     }
 
     /**
@@ -82,4 +97,21 @@ class FlyersController extends Controller
     {
         //
     }
+    public function addPhoto($zip, $street,Request  $request)
+    {
+      // validaTE
+      $this->validate($request, [
+        "photos" => "required|mimes:jpg,jpeg,png,bmp"
+      ]);
+      // new up new Photo instance and basedir and move file
+      $photo = Photo::formFrom($request->file("photos"))->store();
+
+      Flyer::locatedAt($zip, $street)->addPhoto($photo);
+    }
+    public function makePhoto(UploadedFile $file)
+    {
+
+    }
+
+
 }
