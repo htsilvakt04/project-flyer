@@ -15,10 +15,15 @@ class Flyer extends Model
       "description",
     ];
 
+    public function user()
+    {
+      return $this->belongsTo(User::class);
+    }
+
     public static function locatedAt($zip, $street)
     {
       $street = str_replace("-", " ", $street);
-      return static::where(compact("zip", "street"))->first();
+      return static::where(compact("zip", "street"))->firstOrFail();
     }
 
     public function addPhoto(Photo $photo)
@@ -26,13 +31,17 @@ class Flyer extends Model
       return $this->photos()->save($photo);
     }
 
-    public function getPriceAttribute($price)
-    {
-      return "$". number_format($price);
-    }
 
     public function photos()
     {
       return $this->hasMany(Photo::class);
+    }
+    public function onwer()
+    {
+      return $this->belongsTo(User::class, "user_id");
+    }
+    public function ownedBy(User $user)
+    {
+      return $this->user_id == $user->id;
     }
 }

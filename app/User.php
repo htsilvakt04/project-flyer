@@ -26,8 +26,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-    public function topics()
+    public function flyers()
     {
-      $this->hasMany(Topic::class);
+      return $this->hasMany(Flyer::class);
+    }
+    public function owns(Flyer $flyer)
+    {
+      return $this->id == $flyer->user_id;
+    }
+    public function publish(Flyer $flyer)
+    {
+    
+      return $this->flyers()->save($flyer);
     }
 }

@@ -1,16 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\FlyerRequest;
 use App\Photo;
 use App\Flyer;
-use App\Http\Requests\FlyerRequest;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
+
 class FlyersController extends Controller
 {
+
+    protected $signedIn;
     public function __construct()
     {
       $this->middleware("auth", ["except"=>["show"]]);
+
     }
     /**
      * Display a listing of the resource.
@@ -24,11 +29,12 @@ class FlyersController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
+     *views
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
+
         return view("flyers.create");
     }
 
@@ -40,16 +46,17 @@ class FlyersController extends Controller
      */
     public function store(FlyerRequest $request)
     {
+        $user = Auth::user();
 
-        //Create a Flyer record
-        Flyer::create($request->all());
-
+        $flyer = $user->publish(
+          new Flyer($request->all())
+        );
 
         //Flash success message
         flash()->success("Succeess!", "Your flyer has been created.");
 
         //Redirect
-        return redirect()->back();
+        return redirect(flyer_path($flyer));
     }
 
     /**
@@ -61,7 +68,8 @@ class FlyersController extends Controller
     public function show($zip, $street)
     {
         $flyer = Flyer::locatedAt($zip, $street);
-        return view("flyers.show", compact("flyer"));
+        $current_user = Auth::user();
+        return view("flyers.show", compact(["flyer", "current_user"]));
     }
 
     /**
@@ -97,21 +105,7 @@ class FlyersController extends Controller
     {
         //
     }
-    public function addPhoto($zip, $street,Request  $request)
-    {
-      // validaTE
-      $this->validate($request, [
-        "photos" => "required|mimes:jpg,jpeg,png,bmp"
-      ]);
-      // new up new Photo instance and basedir and move file
-      $photo = Photo::formFrom($request->file("photos"))->store();
 
-      Flyer::locatedAt($zip, $street)->addPhoto($photo);
-    }
-    public function makePhoto(UploadedFile $file)
-    {
-
-    }
 
 
 }
