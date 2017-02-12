@@ -13,7 +13,9 @@ const { mix } = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .js('resources/assets/js/libs/sweetalert-dev.js', 'public/js/libs.js')
+   .js('resources/assets/js/libs/lity.js', 'public/js/libs.js')
    .sass('resources/assets/sass/app.sass', 'public/css')
    .combine([
     'resources/assets/css/libs/sweetalert.css',
+    'resources/assets/css/libs/lity.css',
     ], 'public/css/libs.css');

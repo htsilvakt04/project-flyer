@@ -17,4 +17,9 @@ class PhotosController extends Controller
 
     (new AddPhotoToFlyer($flyer, $photo))->save();
   }
+  public function destroy($id)
+  {
+    Photo::findOrFail($id)->delete();
+    return back();
+  }
 }
